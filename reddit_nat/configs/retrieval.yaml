@@ -1,0 +1,47 @@
+run:
+  tag: reddit_nat
+
+# Real-query political-bias arm. Queries are Reddit posts from
+# r/AskALiberal + r/AskConservatives; an upstream stance classifier assigns an
+# `ideology` label per post (see README.md for label extraction details).
+# Retrieval uses the same AllSides corpus as the synthetic arm.
+#   n=3340 queries after keeping the first row per id
+#   (liberal 1327 / conservative 1225 / centrist 788)
+
+dataset:
+  csv_path: reddit_nat/data/reddit_nat_raw.csv
+  query_field: title          # Reddit post title — the question itself
+  ideology_field: ideology    # liberal / conservative / centrist
+  id_field: id
+  min_chars: 30
+
+corpus:
+  # External corpus — already embedded by allsides_synth.
+  source_run: allsides_synth
+  embeddings_root: allsides_synth/embeddings
+  corpus_jsonl: allsides_synth/data/corpus.jsonl
+
+retrieval:
+  max_seq_length: 512
+  top_k: 100
+  encoders:
+    - name: BAAI/bge-large-en-v1.5
+      batch_size: 32
+      devices: [cuda:0]
+    - name: Qwen/Qwen3-Embedding-8B
+      batch_size: 8
+      torch_dtype: bfloat16
+      devices: [cuda:1, cuda:2]
+    - name: nvidia/llama-embed-nemotron-8b
+      batch_size: 8
+      torch_dtype: bfloat16
+      trust_remote_code: true
+      devices: [cuda:3, cuda:4]
+    - name: Octen/Octen-Embedding-8B
+      batch_size: 8
+      torch_dtype: bfloat16
+      devices: [cuda:5, cuda:6]
+    - name: openai/text-embedding-3-large
+      provider: openai
+      batch_size: 100
+

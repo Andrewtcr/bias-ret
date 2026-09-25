@@ -1,0 +1,7 @@
+run_id: probes
+input_name: allsides_synth
+input_data: ../allsides_synth/data/generated_queries.jsonl
+in_cols: [text]
+idx_col: query_id
+out_dir: data/embeddings/
+batch_size: 8

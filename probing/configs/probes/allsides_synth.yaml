@@ -1,0 +1,21 @@
+# AllSides-synth political-lean probe: does the embedding linearly encode
+# left vs. right query framing? (neutral-stance queries excluded.)
+dataset:
+  name: allsides_synth
+  h5_template: data/embeddings/{model_slug}/probes.allsides_synth.h5
+  mode: aligned
+  input_data: ../allsides_synth/data/generated_queries.jsonl
+  input_type: text
+  label_col: stance
+  pos_label: left
+  exclude_label: neutral
+  n_splits: 5
+
+modes: [normal, conditional]
+
+output:
+  probe_dir: results/probes
+  res_dir: results/probe_scores
+
+max_iter: 5000
+seed: 42

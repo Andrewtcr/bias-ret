@@ -1,0 +1,18 @@
+# Paired-arm HCMagic dialect probe: each synthetic AAL paraphrase vs. the
+# original WME question (one probe per variant, same negative baseline).
+dataset:
+  name: hcmagic_synth
+  h5_template: data/embeddings/{model_slug}/probes.hcmagic_synth.h5
+  mode: paired
+  pos_cols: [aal_message1, aal_message2, aal_message3]
+  neg_col: input
+  train_frac: 0.8
+
+modes: [normal, conditional]
+
+output:
+  probe_dir: results/probes
+  res_dir: results/probe_scores
+
+max_iter: 5000
+seed: 42

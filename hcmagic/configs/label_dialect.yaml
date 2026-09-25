@@ -1,0 +1,14 @@
+# Dialect-proxy labeling of the raw HealthCareMagic-100k question set.
+# See hcmagic/scripts/label_dialect.py.
+
+source_json: data/healthq_aal/HealthCareMagic-100k.json   # gitignored raw upstream file
+output_dir: data/healthq_aal
+
+dialect:
+  # null -> $TWITTERAAE_HOME env var, else ../twitteraae (see
+  # docs/reproduction.md).
+  twitteraae_dir: null
+
+sampling:
+  # Size of the larger WME pool synthesize_aal.py draws from.
+  wme_big_n: 5000

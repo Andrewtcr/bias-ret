@@ -1,0 +1,48 @@
+# Binary relevance judging for the AllSides gold-filter ablation.
+# A pair is relevant when GPT-5-mini and Qwen3.5-35B-A3B both assign grade 1.
+model: gpt-5-mini
+endpoint: /v1/responses
+max_output_tokens: 64
+reasoning_effort: minimal
+expected_output_tokens_per_request: 16   # used for the pre-submission cost estimate
+
+system_prompt: |
+  You are a careful retrieval relevance judge.
+  You see a search query about a news story and a news article that a retriever returned for it.
+  Decide whether the article is on-topic for the query -- about the same news story or issue.
+  Return only valid JSON matching the required schema; no extra text.
+
+# Binary 0 / 1 rubric.
+# 1 = article is on-topic for the query (same news story or issue).
+# 0 = off-topic or only superficially related.
+
+pricing:
+  input_per_million: 0.125    # gpt-5-mini batch (50% off list)
+  output_per_million: 1.0
+
+limits:
+  max_requests: 50000
+  max_file_bytes: 209715200
+
+response_schema:
+  name: allsides_relevance_grade
+  schema:
+    type: object
+    additionalProperties: false
+    properties:
+      grade:
+        type: integer
+        enum: [0, 1]
+    required:
+      - grade
+
+# Input controls
+query_max_chars: 600
+doc_max_chars: 600
+top_k_to_judge: 10
+requests_per_batch: 40000
+
+# Sampling: left/right queries only (neutral queries do not enter the L-R lean gap).
+keep_stances:
+  - left
+  - right

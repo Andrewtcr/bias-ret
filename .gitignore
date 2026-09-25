@@ -1,0 +1,50 @@
+# Regenerable figure outputs
+figs/output/
+
+# Python cruft
+__pycache__/
+*.pyc
+*.egg-info/
+.DS_Store
+
+# Pre-computed embeddings — distributed via the embeddings bundle, never
+# committed (see docs/data.md). Rebuildable per docs/reproduction.md.
+/*/embeddings/
+*.npy
+
+# Upstream source file (the extracted answer corpus.jsonl is committed)
+**/HealthCareMagic-100k.json
+
+# Raw OpenAI batch round-trip and interrupted judge runs (parsed judgments.jsonl
+# IS committed)
+**/judge_relevance/requests_part_*
+**/judge_relevance/output_*
+**/judge_relevance/*.tmp
+
+# Intermediates written when regenerating the dialect query sets
+hcmagic/data/healthq_aal/hcmagic_aal_labels.csv
+hcmagic/data/healthq_aal/hcmagic_big_wme_samp.csv
+
+# Human-readable reports the analysis scripts regenerate
+reddit_nat/results/lex_residual.md
+reddit_nat/results/judge_relevance/agreement_summary.md
+
+# Token table computed from the withheld Reddit text (full mode of
+# reddit_nat/scripts/analyze_lexical.py after rehydration)
+reddit_nat/results/lex_residual_token_logodds.csv
+
+# Local run logs
+**/*.log
+
+# probing: bulk h5 embeddings/activations + pickled probes. Regeneration needs
+# the model dependencies. Consolidated probe scores are committed; probe weights
+# are deliberately withheld.
+probing/data/embeddings/
+probing/results/probes/
+probing/results/probe_scores/
+
+# Local API jobs and environment settings
+**/batch_ids.txt
+.env
+.env.*
+.venv/

@@ -1,0 +1,41 @@
+# Both query sets retrieve from the same 112,165-answer HealthCareMagic corpus.
+# Gold answers are resolved from source (input, output) pairs during preparation.
+
+corpus:
+  corpus_jsonl: data/hcmagic_100k/corpus.jsonl   # 112,165 doctor-answer docs
+  tag: hcmagic_100k
+
+datasets:
+  hcmagic:
+    enabled: true
+    # Natural queries: 647 AAL, 659 WME, plus 647 paired WME translations.
+    source_csv: data/healthq_aal/hcmagic_aal_wme.csv
+    translated_jsonl: data/healthq_aal/hcmagic_aal_translated.jsonl
+    qrels_path: data/hcmagic_100k/qrels.json
+  hcmagic_synth:
+    enabled: true
+    paired_jsonl: data/hcmagic_100k/synth_paired.jsonl
+    qrels_path: data/hcmagic_100k/qrels.json
+
+retrieval:
+  max_seq_length: 512
+  encoders:
+    - name: BAAI/bge-large-en-v1.5
+      batch_size: 64
+      devices: [cuda:0]
+    - name: Qwen/Qwen3-Embedding-8B
+      batch_size: 8
+      torch_dtype: bfloat16
+      devices: [cuda:1, cuda:2]
+    - name: nvidia/llama-embed-nemotron-8b
+      batch_size: 8
+      torch_dtype: bfloat16
+      trust_remote_code: true
+      devices: [cuda:3, cuda:4]
+    - name: Octen/Octen-Embedding-8B
+      batch_size: 8
+      torch_dtype: bfloat16
+      devices: [cuda:5, cuda:6]
+    - name: openai/text-embedding-3-large
+      provider: openai
+      batch_size: 100

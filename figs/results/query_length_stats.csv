@@ -1,0 +1,9 @@
+dataset,group,n,median_chars,mean_chars,min_chars,max_chars
+AllSides_synth,left,3723,138.0,138.7,98,187
+AllSides_synth,right,3723,139.0,138.8,87,192
+Reddit_nat,liberal,1327,152.0,165.7,98,302
+Reddit_nat,conservative,1225,154.0,168.0,97,302
+HCMagic_synth,WME,4999,362.0,437.1,63,5141
+HCMagic_synth,AAL,14997,384.0,461.8,63,5332
+HCMagic_nat,WME,659,358.0,434.5,119,2060
+HCMagic_nat,AAL,647,309.0,351.8,27,1724

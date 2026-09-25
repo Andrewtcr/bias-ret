@@ -1,0 +1,9 @@
+# Dataset display names and probe config names for plot_regenerated_probes.py
+# (paper order: HCMagic left, AllSides right).
+datasets:
+  - display: "HCMagic$_{\\text{synth}}$"
+    ds_name: hcmagic_synth
+  - display: "AllSides$_{\\text{synth}}$"
+    ds_name: allsides_synth
+
+output_dir: ../figs/output

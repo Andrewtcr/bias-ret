@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bias-ret"
+version = "0.1.0"
+requires-python = ">=3.10"
+# Deps for rendering the figures/tables from committed data and for re-running
+# retrieval + the per-stage analyses (BM25, LLM-judge agreement, …).
+# Re-encoding the corpus additionally needs torch + the encoder libs + openai;
+# those are documented in docs/reproduction.md, not required here.
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "statsmodels",
+    "matplotlib",
+    "pyyaml",
+    "scienceplots",
+    "scikit-learn",
+    "rank-bm25",
+    "bm25s",
+    "pyarrow",          # pd.read_parquet engine for the gold-filter cache
+    "tabulate",         # pandas .to_markdown() in the judge-agreement report
+]
+
+[project.optional-dependencies]
+test = ["h5py", "tqdm"]
+
+[tool.setuptools]
+packages = ["src", "allsides_synth", "hcmagic", "reddit_nat", "probing"]

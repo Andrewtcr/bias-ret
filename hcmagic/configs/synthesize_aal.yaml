@@ -1,0 +1,14 @@
+# Synthetic AAL paraphrase generation for the HCMagic-synth (paired) arm.
+# See hcmagic/scripts/synthesize_aal.py.
+
+source_csv: data/healthq_aal/hcmagic_big_wme_samp.csv   # from label_dialect.py
+input_col: input
+output_csv: data/healthq_aal/hcmagic_wme_synth.csv
+
+num_variants: 3
+
+external:
+  # null -> $PHONATE_HOME env var, else the default relative path noted in
+  # docs/reproduction.md. (multivalue is pip-installed, not
+  # cloned, so it needs no path here.)
+  phonate_dir: null       # default ../PhonATe

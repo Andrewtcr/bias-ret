@@ -1,0 +1,7 @@
+run_id: probes
+input_name: hcmagic_synth
+input_data: ../hcmagic/data/healthq_aal/hcmagic_wme_synth.csv
+in_cols: [input, aal_message1, aal_message2, aal_message3]
+idx_col: idx
+out_dir: data/embeddings/
+batch_size: 8

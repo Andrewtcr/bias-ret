@@ -1,0 +1,13 @@
+{
+  "n_cells": 3723,
+  "n_articles": 999,
+  "n_articles_with_multi_frame": 973,
+  "n_cells_with_sibling": 3697,
+  "n_articles_dropped_single_frame": 26,
+  "n_cells_no_sibling": 26,
+  "left_label": "left",
+  "right_label": "right",
+  "n_baseline_draws_per_anchor": 5,
+  "bootstrap_B": 5000,
+  "random_seed": 42
+}

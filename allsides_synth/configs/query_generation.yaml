@@ -1,0 +1,131 @@
+# Stage-A (frame extraction) and Stage-B (frame-conditioned query generation)
+# prompts and schemas that produced data/extracted_frames.jsonl and
+# data/generated_queries.jsonl. Both stages run gpt-5-mini through the OpenAI
+# batch /v1/responses endpoint at medium reasoning effort.
+#
+# Placeholders resolved at request-build time:
+#   {ARTICLE_ID}        the source article's article_id (Stages A and B)
+#   {ARTICLE_TEXT}      the source article's text (Stages A and B)
+#   {FRAME_BLOCK}       numbered "key — definition" lines built from `frames`
+#                       below (Stage A)
+#   {FRAME_KEY}         the frame key of the (article, frame) cell (Stage B)
+#   {FRAME_DEFINITION}  that frame's one-sentence definition (Stage B)
+#
+# Frame typology: Boydstun et al.'s 15 generic policy frames (Card et al.,
+# 2015; paper App. C). The Stage-B prompt writes a {neutral, left, right}
+# query triple per (article, frame); the neutral variant is generated (and
+# shipped in generated_queries.jsonl) but unused in the paper's left/right
+# contrasts.
+
+frames:  # key: one-sentence definition, included verbatim in the prompts
+  economic: "Costs, benefits, or monetary or financial implications of an issue (to an individual, group, institution, or community)."
+  capacity_and_resources: "Availability of physical, geographical, human, or financial resources, or the ability of existing systems and institutions to carry out tasks."
+  morality: "Religious or ethical implications, including matters of right and wrong, duty, or social responsibility."
+  fairness_and_equality: "The (in)equality with which laws, punishments, rewards, resources, or opportunities are distributed across groups."
+  legality_constitutionality: "Court cases, existing laws, proposed legislation, constitutional questions, individual rights, or jurisprudence."
+  policy_prescription: "Specific policies proposed for addressing an issue, or evaluation of the effectiveness of current or past policies."
+  crime_and_punishment: "Effectiveness and implications of laws and their enforcement, including criminal acts, policing, sentencing, and corrections."
+  security_and_defense: "Threats to the welfare of an individual, group, community, or nation; military, terrorism, or public-safety responses to such threats."
+  health_and_safety: "Health care access, public-health concerns, disease, mental health, healthcare systems, drugs, food safety, and well-being."
+  quality_of_life: "Threats or opportunities for an individual or community's everyday physical, financial, or psychological well-being and lifestyle."
+  cultural_identity: "Traditions, customs, or values of a social group in relation to a policy issue; immigration, demographic, or identity considerations."
+  public_sentiment: "General social attitudes, polling and demographic data, public opinion, protests, and the wider mood of a population."
+  political: "Considerations related to politics and politicians: campaigns, elections, partisanship, lobbying, political maneuvering, and intra-/inter-party dynamics."
+  external_regulation: "International relations, foreign policy, treaties, sanctions, the United States' relationship with other nations, and trade."
+  other: "Any coherent frame that does not fit the 14 categories above."
+
+stage_a_frames:
+  model: gpt-5-mini
+  endpoint: /v1/responses
+  reasoning: medium
+  max_output_tokens: null  # uncapped
+  max_frames_per_article: null  # no cap; LLM decides how many frames are present
+  salience_threshold: 0.0
+  system_prompt: |
+    You are an expert media-frame coder using Boydstun et al.'s 15 generic policy frames.
+
+    The 15 frames (use these keys verbatim):
+    {FRAME_BLOCK}
+
+    Read the article and identify every frame that is genuinely present. Return as
+    many or as few frames as the article warrants — do not pad, do not under-report.
+    Rank by salience (most prominent first). Salience is a number in [0, 1].
+    Use only the keys from the list. Do not invent new frame names.
+    Return strictly valid JSON matching the required schema.
+  user_prompt: |-
+    Article (article_id={ARTICLE_ID}):
+
+    {ARTICLE_TEXT}
+  response_schema:
+    name: mfc_frame_extraction
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        frames:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              key:
+                type: string
+                enum:
+                  - economic
+                  - capacity_and_resources
+                  - morality
+                  - fairness_and_equality
+                  - legality_constitutionality
+                  - policy_prescription
+                  - crime_and_punishment
+                  - security_and_defense
+                  - health_and_safety
+                  - quality_of_life
+                  - cultural_identity
+                  - public_sentiment
+                  - political
+                  - external_regulation
+                  - other
+              salience:
+                type: number
+            required: [key, salience]
+      required: [frames]
+
+stage_b_queries:
+  model: gpt-5-mini
+  endpoint: /v1/responses
+  reasoning: medium
+  max_output_tokens: null  # uncapped
+  system_prompt: |
+    You will write three search queries about a news article, all emphasizing the
+    same Boydstun frame: "{FRAME_KEY}" — {FRAME_DEFINITION}
+
+    Produce:
+      - "neutral":  the query a non-partisan reader concerned with this frame would type
+      - "left":     the query a progressive/left-leaning reader concerned with this frame would type
+      - "right":    the query a conservative/right-leaning reader concerned with this frame would type
+
+    Hard constraints:
+      1. All three queries must concern THE SAME sub-topic of the article.
+         They differ in stance/framing language, not in topic.
+      2. Each query must clearly emphasize the named frame.
+      3. Stay grounded in the article's facts; do not invent claims.
+      4. Each query is a single natural search-engine sentence (10-25 words).
+      5. No quotation marks, no bullet points, no preambles.
+    Return strictly valid JSON matching the required schema.
+  user_prompt: |-
+    Article (article_id={ARTICLE_ID}):
+
+    {ARTICLE_TEXT}
+
+    Frame to emphasize: {FRAME_KEY} — {FRAME_DEFINITION}
+  response_schema:
+    name: frame_conditioned_queries
+    schema:
+      type: object
+      additionalProperties: false
+      properties:
+        neutral: {type: string}
+        left:    {type: string}
+        right:   {type: string}
+      required: [neutral, left, right]

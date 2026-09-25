@@ -1,0 +1,30 @@
+# Within-cell pairing similarity check (AllSides political-bias arm)
+# Goal: empirically test whether (article, frame)-level pairing of L/R queries
+# is tighter than article-only pairing (which would already condition out topic).
+
+# Paths are relative to the repo root (run the script from there).
+embeddings_root: allsides_synth/embeddings
+output_root: allsides_synth/results/pairing_similarity
+
+encoders:
+  - bge-large-en-v1.5
+  - llama-embed-nemotron-8b
+  - octen-embedding-8b
+  - qwen3-embedding-8b
+  - text-embedding-3-large
+
+# Stance labels in the queries.jsonl files
+left_label: left
+right_label: right
+
+# For each anchor cell c=(article,frame), how many random partners c' to draw
+# from the same-article-other-frame pool and from the cross-article pool.
+# We average cosine over these draws to reduce sampling noise per anchor while
+# keeping the script cheap and the paired structure (one value per anchor) intact.
+n_baseline_draws_per_anchor: 5
+
+# Bootstrap CI for median paired delta (within-cell vs within-article-cross-frame).
+# Cluster bootstrap on article_id.
+bootstrap_B: 5000
+
+random_seed: 42

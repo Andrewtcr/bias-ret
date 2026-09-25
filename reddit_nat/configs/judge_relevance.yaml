@@ -1,0 +1,47 @@
+model: gpt-5-mini
+endpoint: /v1/responses
+max_output_tokens: 64
+reasoning_effort: minimal
+expected_output_tokens_per_request: 16   # observed ~12 with binary schema
+
+system_prompt: |
+  You are a careful retrieval relevance judge.
+  You see a question from a Reddit user and a news article that a retriever returned for it.
+  Decide whether the article would help that user reach an answer.
+  Return only valid JSON matching the required schema; no extra text.
+
+# Binary 0 / 1 rubric.
+# 1 = article is on-topic for the question and provides at least partial information
+#     a curious reader could use to answer it.
+# 0 = off-topic, only superficially related, or provides no useful information.
+
+pricing:
+  input_per_million: 0.125    # gpt-5-mini batch (50% off list)
+  output_per_million: 1.0
+
+limits:
+  max_requests: 50000
+  max_file_bytes: 209715200
+
+response_schema:
+  name: reddit_relevance_grade
+  schema:
+    type: object
+    additionalProperties: false
+    properties:
+      grade:
+        type: integer
+        enum: [0, 1]
+    required:
+      - grade
+
+# Input controls
+query_max_chars: 600     # title + selftext snippet
+doc_max_chars: 600       # headline + article excerpt
+top_k_to_judge: 10
+requests_per_batch: 40000
+
+# Sampling
+keep_ideologies:
+  - liberal
+  - conservative

@@ -1,7 +1,8 @@
 # Retrieval Sensitivity to Identity Signals in Queries
 
 Code and intermediate data accompanying the paper by Andrew Tang, Nicholas
-Deas, Kathleen McKeown, and Vishal Misra (see [Citation](#citation)). Every
+Deas, Kathleen McKeown, and Vishal Misra
+([arXiv:2609.36534](https://arxiv.org/abs/2609.36534); see [Citation](#citation)). Every
 analysis figure and table can be regenerated from committed CSV, JSONL, and
 Parquet files without a large data download.
 
@@ -168,9 +169,13 @@ models or make API calls.
 
 ```bibtex
 @misc{tang2026retrieval,
-  title  = {Retrieval Sensitivity to Identity Signals in Queries},
-  author = {Tang, Andrew and Deas, Nicholas and McKeown, Kathleen and Misra, Vishal},
-  year   = {2026}
+  title         = {Retrieval Sensitivity to Identity Signals in Queries},
+  author        = {Tang, Andrew and Deas, Nicholas and McKeown, Kathleen and Misra, Vishal},
+  year          = {2026},
+  eprint        = {2609.36534},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.CL},
+  url           = {https://arxiv.org/abs/2609.36534}
 }
 ```
 

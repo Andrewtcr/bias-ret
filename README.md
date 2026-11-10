@@ -2,7 +2,8 @@
 
 Code and intermediate data accompanying the paper by Andrew Tang, Nicholas
 Deas, Kathleen McKeown, and Vishal Misra
-([arXiv:2609.36534](https://arxiv.org/abs/2609.36534); see [Citation](#citation)). Every
+([EMNLP 2026](https://aclanthology.org/2026.emnlp-main.2652/);
+[arXiv:2609.36534](https://arxiv.org/abs/2609.36534); see [Citation](#citation)). Every
 analysis figure and table can be regenerated from committed CSV, JSONL, and
 Parquet files without a large data download.
 
@@ -168,14 +169,25 @@ models or make API calls.
 ## Citation
 
 ```bibtex
-@misc{tang2026retrieval,
-  title         = {Retrieval Sensitivity to Identity Signals in Queries},
-  author        = {Tang, Andrew and Deas, Nicholas and McKeown, Kathleen and Misra, Vishal},
-  year          = {2026},
-  eprint        = {2609.36534},
-  archivePrefix = {arXiv},
-  primaryClass  = {cs.CL},
-  url           = {https://arxiv.org/abs/2609.36534}
+@inproceedings{tang-etal-2026-retrieval,
+    title = "Retrieval Sensitivity to Identity Signals in Queries",
+    author = "Tang, Andrew  and
+      Deas, Nicholas  and
+      McKeown, Kathleen  and
+      Misra, Vishal",
+    editor = "Lee, Hung-Yi  and
+      Dev, Sunipa  and
+      Li, Junyi Jessy  and
+      Elliott, Desmond",
+    booktitle = "Proceedings of the 2026 Conference on Empirical Methods in Natural Language Processing",
+    month = oct,
+    year = "2026",
+    address = "Budapest, Hungary",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2026.emnlp-main.2652/",
+    doi = "10.18653/2026.emnlp-main.2652",
+    pages = "60355--60381",
+    ISBN = "979-8-89176-459-0"
 }
 ```
 
